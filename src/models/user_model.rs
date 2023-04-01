@@ -1,12 +1,20 @@
-use bson::oid::ObjectId;
 use serde::{Serialize, Deserialize};
 use tokio::task;
 use validator::Validate;
 use wither::Model as WitherModel;
+use wither::bson::{doc, oid::ObjectId};
 use bcrypt::{hash, verify, DEFAULT_COST};
-use crate::{utils::date::Date, errors::Error};
+
+
+use crate::{utils::{date::Date, models::ModelExt}, errors::Error};
+
+
+impl ModelExt for User {
+    type T = User;
+}
 
 #[derive(Debug, Serialize, Deserialize, WitherModel, Validate)]
+#[model(index(keys=r#"doc!{"email": 1}"#, options=r#"doc!{"unique": true}"#))]
 pub struct User {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     pub id: Option<ObjectId>,
@@ -52,9 +60,6 @@ where
 {
   // TODO: Hash password with salt.
   // https://docs.rs/bcrypt/latest/bcrypt/fn.hash_with_salt.html
-  #[cfg(not(test))]
-  let cost = bcrypt::DEFAULT_COST;
-  #[cfg(test)]
   let cost = 4;
   task::spawn_blocking(move || bcrypt::hash(password.as_ref(), cost))
     .await
