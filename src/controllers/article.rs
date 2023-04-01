@@ -2,7 +2,7 @@ use axum::{Json};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::time::Instant;
-use crate::{models::Article::{Article}, utils::models::ModelExt, errors::Error};
+use crate::{models::article::{Article}, utils::models::ModelExt, errors::Error};
 
 #[derive(Deserialize, Serialize)]
 pub struct ArticleWriteRequest {

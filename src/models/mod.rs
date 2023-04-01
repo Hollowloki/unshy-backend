@@ -1,2 +1,2 @@
-pub mod Article;
-pub mod User;
+pub mod article;
+pub mod user;
