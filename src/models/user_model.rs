@@ -13,7 +13,7 @@ impl ModelExt for User {
     type T = User;
 }
 
-#[derive(Debug, Serialize, Deserialize, WitherModel, Validate)]
+#[derive(Debug, Serialize, Deserialize, WitherModel, Validate,Clone)]
 #[model(index(keys=r#"doc!{"email": 1}"#, options=r#"doc!{"unique": true}"#))]
 pub struct User {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
@@ -48,7 +48,7 @@ impl User {
       }
     }
 
-    pub fn is_password_match(self, password: String) -> bool {
+    pub fn is_password_match(self, password: &str) -> bool {
         bcrypt::verify(password, &self.password).unwrap_or(false)
     }
   }
