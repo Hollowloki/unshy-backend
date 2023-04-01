@@ -3,10 +3,9 @@ use std::net::SocketAddr;
 mod router;
 mod controllers;
 mod db;
-mod models;
 mod utils;
 mod errors;
-
+mod models;
 
 #[tokio::main]
 async fn main() {
@@ -16,7 +15,9 @@ async fn main() {
     let app = Router::new()
     .merge(api_routes)
     .fallback(fallback);
-    
+    models::sync_indexes()
+    .await
+    .expect("Failed to sync database indexes");
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     println!("listening on {}", addr);
