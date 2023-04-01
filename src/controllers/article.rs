@@ -13,16 +13,16 @@ pub struct ArticleWriteRequest {
 
 pub async fn write_post( Json(article): Json<ArticleWriteRequest>) -> Result<Json<Value>, Error>
 {
-  let user = Article::new(article.title, article.abstracts, article.content);
+  let article = Article::new(article.title, article.abstracts, article.content);
 
   
   let now = Instant::now();
 
-  let user = Article::create(user).await?;
+  let article = Article::create(article).await?;
 
   let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
 
-  return Ok(Json(json!({"message": user})));
+  return Ok(Json(json!({"message": article})));
 
 }
