@@ -3,7 +3,7 @@ use bytes::{BytesMut, BufMut};
 use http::StatusCode;
 use serde::Serialize;
 use tracing::error;
-
+#[derive(Debug, Clone)]
 pub struct CustomResponse<T: Serialize> {
     pub status_code: StatusCode,
     pub body: Option<T>,
