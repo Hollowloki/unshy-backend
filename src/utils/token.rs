@@ -1,3 +1,4 @@
+use axum::{extract::FromRequest, BoxError, body::HttpBody};
 use bson::oid::ObjectId;
 use jsonwebtoken::{errors::Error, DecodingKey, EncodingKey, Header, TokenData, Validation};
 use once_cell::sync::Lazy;
@@ -10,13 +11,12 @@ type TokenResult = Result<TokenData<Claims>, Error>;
 static VALIDATION: Lazy<Validation> = Lazy::new(Validation::default);
 static HEADER: Lazy<Header> = Lazy::new(Header::default);
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TokenUser {
   pub id: ObjectId,
   pub name: String,
   pub email: String,
 }
-
 impl From<User> for TokenUser {
   fn from(user: User) -> Self {
     Self {
