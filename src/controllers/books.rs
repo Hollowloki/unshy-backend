@@ -1,9 +1,9 @@
-use axum::{Router};
+
 use axum::extract::Json;
-use bson::oid::ObjectId;
-use http::{StatusCode, HeaderMap};
+
+use http::{StatusCode};
 use serde::{Deserialize, Serialize};
-use crate::{utils::{custom_response::{CustomResponseBuilder, CustomResponse}, models::ModelExt, token::TokenUser}, models::{books_model::{Book, PublicBook}, user_model::User}, errors::Error};
+use crate::{utils::{custom_response::{CustomResponseBuilder, CustomResponse}, models::ModelExt, token::TokenUser}, models::{books_model::{Book, PublicBook}}, errors::Error};
 
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
