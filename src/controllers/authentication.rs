@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use tracing::debug;
 
-use crate::{errors::{Error, AuthenticateError}, utils::{custom_response::{CustomResponse, CustomResponseBuilder}, models::ModelExt, token}, models::user_model::{User, hash_password}};
+use crate::{errors::{Error, AuthenticateError}, utils::{custom_response::{CustomResponse, CustomResponseBuilder}, models::ModelExt, token}, models::user_model::{User, hash_password, PublicUser}};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Register {
@@ -17,10 +17,13 @@ pub struct Register {
 
 
 
-pub async fn register(Json(credentials): Json<Register>) -> Result<CustomResponse<User>, Error> {
+
+
+pub async fn register(Json(credentials): Json<Register>) -> Result<CustomResponse<PublicUser>, Error> {
     let password_hash = hash_password(credentials.password).await?;
     let user = User::new(credentials.username, credentials.email, password_hash);
     let res = User::create(user).await?;
+    let res = PublicUser::from(res);
     let res = CustomResponseBuilder::new().body(res).status(StatusCode::CREATED).build();
     Ok(res)
 }
