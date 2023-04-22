@@ -9,7 +9,8 @@ pub mod routes {
     use crate::controllers::{
         authentication::{authenticate_user, register},
         books::create_book,
-        words::save_word,
+        wordlog::save_word_log,
+        words::{index, save_word},
     };
 
     pub async fn routes() -> Router {
@@ -18,6 +19,8 @@ pub mod routes {
             .route("/login", post(authenticate_user))
             .route("/words", post(save_word))
             .route("/books", post(create_book))
+            .route("/words", get(index))
+            .route("/wordlog", post(save_word_log))
             .layer(SetSensitiveHeadersLayer::new(std::iter::once(
                 header::AUTHORIZATION,
             )));

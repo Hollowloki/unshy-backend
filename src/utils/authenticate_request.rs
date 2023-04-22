@@ -23,7 +23,6 @@ where
             .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
             .map_err(|_| AuthenticateError::InvalidToken)?;
-
         //let secret = SETTINGS.auth.secret.as_str();
         let secret = "secret";
         let token_data =

@@ -1,8 +1,3 @@
-use axum::extract::Json;
-use bson::oid::ObjectId;
-use http::StatusCode;
-use serde::{Deserialize, Serialize};
-
 use crate::{
     errors::Error,
     models::word_model::Word,
@@ -12,11 +7,16 @@ use crate::{
         token::TokenUser,
     },
 };
+use axum::extract::Json;
+use bson::{doc, oid::ObjectId};
+use http::StatusCode;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WordRequest {
     word: String,
     definition: String,
+    book_id: i32,
 }
 
 pub async fn save_word(
@@ -31,4 +31,13 @@ pub async fn save_word(
         .status(StatusCode::CREATED)
         .build();
     Ok(res)
+}
+
+pub async fn index(user: TokenUser) -> Result<CustomResponse<Vec<Word>>, Error> {
+    let words = Word::find(doc! { "user_id": user.id }, None).await?;
+    let res = CustomResponseBuilder::new()
+        .body(words)
+        .status(StatusCode::OK)
+        .build();
+    return Ok(res);
 }
